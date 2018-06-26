@@ -11,9 +11,9 @@
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav" *ngIf="loggedIn()">
-        <li><a href="#">Matches</a></li>
-        <li><a href="#">Lists</a></li>
-        <li><a href="#">Messages</a></li>
+        <li routerLinkActive="active"><a [routerLink]="['/members']" routerLinkActive="router-link-active" >Matches</a></li>
+        <li routerLinkActive="active"><a [routerLink]="['/lists']" routerLinkActive="router-link-active" >Lists</a></li>
+        <li routerLinkActive="active"><a [routerLink]="['/messages']" routerLinkActive="router-link-active" >Messages</a></li>
       </ul>
 
       <!--#loginform - angular-form defenition and Template-Reference
@@ -34,7 +34,7 @@
 
       <ul *ngIf="loggedIn()" class="nav navbar-nav navbar-right">
         <li class="dropdown" dropdown>
-          <a href="#" class="dropdown-toggle" dropdownToggle>Welcome User<span class="caret"></span></a>
+          <a (click)="false" routerLinkActive="router-link-active"  class="dropdown-toggle" dropdownToggle>Welcome User<span class="caret"></span></a>
           <ul class="dropdown-menu" *dropdownMenu>
             <li><a href="#"><i class="fa fa-user"></i> Edit Profile</a></li>
             <li role="separator" class="divider"></li>
