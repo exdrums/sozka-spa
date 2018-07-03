@@ -7,13 +7,13 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Sozka</a>
+      <a class="navbar-brand" [routerLink]="['/home']" routerLinkActive="active" >Sozka</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav" *ngIf="loggedIn()">
-        <li routerLinkActive="active"><a [routerLink]="['/members']" routerLinkActive="router-link-active" >Matches</a></li>
-        <li routerLinkActive="active"><a [routerLink]="['/lists']" routerLinkActive="router-link-active" >Lists</a></li>
-        <li routerLinkActive="active"><a [routerLink]="['/messages']" routerLinkActive="router-link-active" >Messages</a></li>
+        <li routerLinkActive="active"><a [routerLink]="['/members']">Matches</a></li>
+        <li routerLinkActive="active"><a [routerLink]="['/lists']">Lists</a></li>
+        <li routerLinkActive="active"><a [routerLink]="['/messages']">Messages</a></li>
       </ul>
 
       <!--#loginform - angular-form defenition and Template-Reference
