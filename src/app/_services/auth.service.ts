@@ -1,26 +1,31 @@
 import { Injectable } from '@angular/core';
-import { Http, RequestOptions, Headers, Response } from '@angular/http';
 import { map, catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { AuthUser } from '../_models/authUser';
 
 @Injectable()
 export class AuthService {
 
   baseUrl = environment.apiUrl + 'auth/';
   userToken: any;
+  decodedToken: any;
 
-constructor(private http: Http) { }
+constructor(private http: HttpClient, private jwtHelperSerice: JwtHelperService) { }
 
   login(model: any) {
-    return this.http.post(this.baseUrl + 'login', model, this.requestOptions())
+    return this.http.post<AuthUser>(this.baseUrl + 'login', model, {
+      headers: new HttpHeaders().set('Content-Type', 'application/json')
+    })
     .pipe(
-      catchError(this.handleError),
-      map((response: Response) => {
-        const user = response.json();
+      // catchError(this.handleError),
+      map(user => {
         // console.log('response:' + response.json());
         if (user) {
           localStorage.setItem('token', user.tokenString);
+          this.decodedToken = this.jwtHelperSerice.decodeToken(user.tokenString);
           this.userToken = user.tokenString;
         }
       })
@@ -28,34 +33,42 @@ constructor(private http: Http) { }
   }
 
   register(model: any) {
-    return this.http.post(this.baseUrl + 'register', model, this.requestOptions()).pipe(catchError(this.handleError));
+    return this.http.post(this.baseUrl + 'register', model, {
+      headers: new HttpHeaders().set('Content-Type', 'application/json')
+    });
+    // .pipe(catchError(this.handleError));
   }
 
   loggedIn() {
-    return !!localStorage.getItem('token');
+    const token = this.jwtHelperSerice.tokenGetter();
+    if (!token) {
+      return false;
+    }
+    return !this.jwtHelperSerice.isTokenExpired(token);
   }
 
-  private requestOptions() {
-    const headers = new Headers({'Content-type': 'application/json'});
-    return new RequestOptions({headers: headers});
-  }
+  // removed because of update to HttpClient
+  // private requestOptions() {
+  //   const headers = new Headers({'Content-type': 'application/json'});
+  //   return new RequestOptions({headers: headers});
+  // }
 
-  private handleError(error: any) {
-    const applicationError = error.headers.get('Application-Error');
-    if (applicationError) {
-      return Observable.throw(applicationError);
-    }
-    const serverError = error.json();
-    let modelStateErrors = '';
-    if (serverError) {
-      for (const key in serverError) {
-        if (serverError[key]) {
-          modelStateErrors += serverError[key] + '\n';
-        }
-      }
-    }
-    return throwError(modelStateErrors || 'Server error');
-  }
+  // private handleError(error: any) {
+  //   const applicationError = error.headers.get('Application-Error');
+  //   if (applicationError) {
+  //     return Observable.throw(applicationError);
+  //   }
+  //   const serverError = error.json();
+  //   let modelStateErrors = '';
+  //   if (serverError) {
+  //     for (const key in serverError) {
+  //       if (serverError[key]) {
+  //         modelStateErrors += serverError[key] + '\n';
+  //       }
+  //     }
+  //   }
+  //   return throwError(modelStateErrors || 'Server error');
+  // }
 
 
 }
