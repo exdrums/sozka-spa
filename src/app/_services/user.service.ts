@@ -29,6 +29,10 @@ constructor(private http: HttpClient) { }
         // map(reponse => <User>response.json())
       // );
   }
+
+  updateUser(id: number, user: User) {
+    return this.http.put(this.baseUrl + 'users/' + id, user);
+  }
   // in HttpClient => auto
   // private jwt() {
   //   const token = localStorage.getItem('token');
