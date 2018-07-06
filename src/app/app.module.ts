@@ -30,6 +30,8 @@ import { MemberEditComponent } from './members/member-edit/member-edit.component
 import { MemberEditResolver } from './_resolves/member-edit.resolver';
 import { ErrorInterceptorProvider } from './_services/error.interceptor';
 import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
+import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
+import { FileUploadModule } from '../../node_modules/ng2-file-upload';
 
 @NgModule({
   declarations: [
@@ -43,7 +45,8 @@ import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
     MessagesComponent,
     MemberCardComponent,
     MemberDetailComponent,
-    MemberEditComponent
+    MemberEditComponent,
+    PhotoEditorComponent
 ],
   imports: [
     BrowserModule,
@@ -61,7 +64,8 @@ import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
         },
         whitelistedDomains: ['localhost:5000']
       }
-    })
+    }),
+    FileUploadModule
   ],
   providers: [
     AuthService,
