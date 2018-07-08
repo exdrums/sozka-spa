@@ -33,6 +33,9 @@
       </form>
 
       <ul *ngIf="loggedIn()" class="nav navbar-nav navbar-right">
+        <li>
+          <img src="{{photoUrl}}" alt="">
+        </li>
         <li class="dropdown" dropdown>
           <a (click)="false" routerLinkActive="router-link-active"  class="dropdown-toggle" dropdownToggle>
             Welcome {{authService.decodedToken?.unique_name | titlecase}}

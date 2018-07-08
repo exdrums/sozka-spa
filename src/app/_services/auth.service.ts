@@ -5,6 +5,8 @@ import { environment } from '../../environments/environment';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthUser } from '../_models/authUser';
+import { User } from '../_models/User';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class AuthService {
@@ -12,8 +14,17 @@ export class AuthService {
   baseUrl = environment.apiUrl + 'auth/';
   userToken: any;
   decodedToken: any;
+  currentUser: User;
+  // default NavBar photo as BS
+  private photoUrl = new BehaviorSubject<string>('../../assets/user.png');
+  // observable object for BS photo, to subscribe from all components
+  currentPhotoUrl = this.photoUrl.asObservable();
 
 constructor(private http: HttpClient, private jwtHelperSerice: JwtHelperService) { }
+
+  changeMemberPhoto(photoUrl) {
+    this.photoUrl.next(photoUrl);
+  }
 
   login(model: any) {
     return this.http.post<AuthUser>(this.baseUrl + 'login', model, {
@@ -25,8 +36,11 @@ constructor(private http: HttpClient, private jwtHelperSerice: JwtHelperService)
         // console.log('response:' + response.json());
         if (user) {
           localStorage.setItem('token', user.tokenString);
+          localStorage.setItem('user', JSON.stringify(user.user));
+          this.currentUser = user.user;
           this.decodedToken = this.jwtHelperSerice.decodeToken(user.tokenString);
           this.userToken = user.tokenString;
+          this.changeMemberPhoto(this.currentUser.photoUrl);
         }
       })
     );
