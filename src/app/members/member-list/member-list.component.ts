@@ -21,7 +21,7 @@ constructor(
   ngOnInit() {
     // this.loadUsers();
     this.route.data.subscribe(data => {
-      this.users = data['users'];
+      this.users = data['users'].result;
     });
   }
 

@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { Observable, throwError } from 'rxjs';
+import { Observable, pipe } from 'rxjs';
 import { User } from '../_models/User';
-import { map, catchError } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { PaginatedResult } from '../_models/Pagination';
 
 @Injectable({
   providedIn: 'root'
@@ -14,12 +15,23 @@ export class UserService {
 
 constructor(private http: HttpClient) { }
 
-  getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.baseUrl + 'users/'); // , this.jwt()) ++can be used { params } ( = new HttpParams )
-      // .pipe(
-        // catchError(this.handleError), => ErrorInterceptor
-        // map(response => <User[]>response.json()) with HttpClient makes no sense
-      // );
+  getUsers(page?, itemsPerPage?) {
+    const paginatedResult: PaginatedResult<User[]> = new PaginatedResult<User[]>();
+    let params = new HttpParams();
+    if (page != null && itemsPerPage != null) {
+      params = params.append('pageNumber', page);
+      params = params.append('pageSize', itemsPerPage);
+    }
+    return this.http.get<User[]>(this.baseUrl + 'users', { observe: 'response', params} )
+    .pipe(
+        map(response => {
+          paginatedResult.result = response.body;
+          if (response.headers.get('Pagination') != null) {
+            paginatedResult.pagination = JSON.parse(response.headers.get('pagination'));
+          }
+          return paginatedResult;
+        })
+      );
   }
 
   getUser(id): Observable<User> {
