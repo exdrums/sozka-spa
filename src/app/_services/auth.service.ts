@@ -40,14 +40,18 @@ constructor(private http: HttpClient, private jwtHelperSerice: JwtHelperService)
           this.currentUser = user.user;
           this.decodedToken = this.jwtHelperSerice.decodeToken(user.tokenString);
           this.userToken = user.tokenString;
-          this.changeMemberPhoto(this.currentUser.photoUrl);
+          if (this.currentUser.photoUrl != null) {
+            this.changeMemberPhoto(this.currentUser.photoUrl);
+          } else {
+            this.changeMemberPhoto('../../assets/user.png');
+          }
         }
       })
     );
   }
 
-  register(model: any) {
-    return this.http.post(this.baseUrl + 'register', model, {
+  register(user: User) {
+    return this.http.post<User>(this.baseUrl + 'register', user, {
       headers: new HttpHeaders().set('Content-Type', 'application/json')
     });
     // .pipe(catchError(this.handleError));
