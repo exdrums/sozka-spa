@@ -15,12 +15,18 @@ export class UserService {
 
 constructor(private http: HttpClient) { }
 
-  getUsers(page?, itemsPerPage?, userParams?: any) {
+  getUsers(page?, itemsPerPage?, userParams?: any, likesParam?: string) {
     const paginatedResult: PaginatedResult<User[]> = new PaginatedResult<User[]>();
     let params = new HttpParams();
     if (page != null && itemsPerPage != null) {
       params = params.append('pageNumber', page);
       params = params.append('pageSize', itemsPerPage);
+    }
+    if (likesParam === 'Likers') {
+      params = params.append('Likers', 'true');
+    }
+    if (likesParam === 'Likees') {
+      params = params.append('Likees', 'true');
     }
     if (userParams != null) {
       params = params.append('minAge', userParams.minAge);
@@ -58,6 +64,10 @@ constructor(private http: HttpClient) { }
 
   deletePhoto(userId: number, id: number) {
     return this.http.delete(this.baseUrl + 'users/' + userId + '/photos/' + id);
+  }
+
+  sendLike(id: number, recipientId: number) {
+    return this.http.post(this.baseUrl + 'users/' + id + '/like/' + recipientId, {});
   }
   // in HttpClient => auto
   // private jwt() {
