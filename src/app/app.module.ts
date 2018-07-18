@@ -35,6 +35,7 @@ import { FileUploadModule } from '../../node_modules/ng2-file-upload';
 import { TimeAgoPipe } from 'time-ago-pipe';
 import { ListsResolver } from './_resolves/lists.resolver';
 import { MessagesResolver } from './_resolves/message.resolver';
+import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { MessagesResolver } from './_resolves/message.resolver';
     MemberCardComponent,
     MemberDetailComponent,
     MemberEditComponent,
+    MemberMessagesComponent,
     PhotoEditorComponent,
     TimeAgoPipe
 ],
