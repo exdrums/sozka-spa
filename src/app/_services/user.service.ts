@@ -99,6 +99,15 @@ constructor(private http: HttpClient) { }
       );
   }
 
+  sendMessage(id: number, message: Message) {
+    return this.http.post<Message>(this.baseUrl + 'users/' + id + '/messages', message)
+    .pipe(
+      map(response => {
+        return response;
+      })
+    );
+  }
+
   // in HttpClient => auto
   // private jwt() {
   //   const token = localStorage.getItem('token');
