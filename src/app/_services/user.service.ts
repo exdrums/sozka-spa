@@ -109,9 +109,15 @@ constructor(private http: HttpClient) { }
   }
 
   deleteMessage(id: number, userId: number) {
-    return this.http.post(this.baseUrl + 'users/' + userId + '/messages/' + id, {});
+    return this.http.post(this.baseUrl + 'users/' + userId + '/messages/' + id, {})
+      .pipe(
+        map(response => {})
+      );
   }
 
+  markAsRead(userId: number, messageId: number) {
+    return this.http.post(this.baseUrl + 'users/' + userId + '/messages/' + messageId + '/read', {}).subscribe();
+  }
   // in HttpClient => auto
   // private jwt() {
   //   const token = localStorage.getItem('token');
